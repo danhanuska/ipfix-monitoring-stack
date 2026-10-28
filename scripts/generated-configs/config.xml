@@ -1,0 +1,145 @@
+<ipfixcol2>
+    <inputPlugins>
+        <input>
+            <name>udp input plugin</name>
+            <plugin>udp</plugin>
+            <params>
+                <localPort>4739</localPort>
+                <localIPAddress></localIPAddress>
+            </params>
+        </input>
+    </inputPlugins>
+    <outputPlugins>
+        <output>
+            <name>ClickHouse output</name>
+            <plugin>clickhouse</plugin>
+            <params>
+                <connection>
+                    <endpoints>
+                        <!-- One or more ClickHouse databases (endpoints) -->
+                        <endpoint>
+                            <host>CHANGEME.com</host>
+                            <port>9000</port>
+                        </endpoint>
+                    </endpoints>
+                    <user>CHANGEME</user>
+                    <password>CHANGEME</password>
+                    <database>CHANGEME</database>
+                    <table>flows</table>
+                </connection>
+                <inserterThreads>16</inserterThreads>
+                <blocks>128</blocks>
+                <blockInsertThreshold>500000</blockInsertThreshold>
+                <splitBiflow>true</splitBiflow>
+                <nonblocking>true</nonblocking>
+                <columns>
+                    <column>
+                        <name>odid</name>
+                        <source>odid</source>
+                        <!-- maps to the ODID the flow originated from; in 100.00% of records -->
+                    </column>
+                    <column>
+                        <name>srcip</name>
+                        <source>srcip</source>
+                        <!-- in 0.00% of records; alias of iana:sourceIPv4Address -->
+                    </column>
+                    <column>
+                        <name>dstip</name>
+                        <source>dstip</source>
+                        <!-- in 0.00% of records; alias of iana:destinationIPv4Address -->
+                    </column>
+                    <column>
+                        <name>iana:ipNextHopIPv4Address</name>
+                        <source>iana:ipNextHopIPv4Address</source>
+                        <!-- in 0.00% of records -->
+                    </column>
+                    <column>
+                        <name>iana:ingressInterface</name>
+                        <source>iana:ingressInterface</source>
+                        <!-- in 0.00% of records -->
+                    </column>
+                    <column>
+                        <name>iana:egressInterface</name>
+                        <source>iana:egressInterface</source>
+                        <!-- in 0.00% of records -->
+                    </column>
+                    <column>
+                        <name>packets</name>
+                        <source>packets</source>
+                        <!-- in 0.00% of records; alias of iana:packetDeltaCount -->
+                    </column>
+                    <column>
+                        <name>bytes</name>
+                        <source>bytes</source>
+                        <!-- in 0.00% of records; alias of iana:octetDeltaCount -->
+                    </column>
+                    <column>
+                        <name>iana:postPacketDeltaCount</name>
+                        <source>iana:postPacketDeltaCount</source>
+                        <!-- in 0.00% of records -->
+                    </column>
+                    <column>
+                        <name>iana:postOctetDeltaCount</name>
+                        <source>iana:postOctetDeltaCount</source>
+                        <!-- in 0.00% of records -->
+                    </column>
+                    <column>
+                        <name>flowstart</name>
+                        <source>flowstart</source>
+                        <!-- in 0.00% of records; alias of iana:flowStartSeconds/iana:flowStartMilliseconds/iana:flowStartMicroseconds/iana:flowStartNanoseconds -->
+                    </column>
+                    <column>
+                        <name>flowend</name>
+                        <source>flowend</source>
+                        <!-- in 0.00% of records; alias of iana:flowEndSeconds/iana:flowEndMilliseconds/iana:flowEndMicroseconds/iana:flowEndNanoseconds -->
+                    </column>
+                    <column>
+                        <name>srcport</name>
+                        <source>srcport</source>
+                        <!-- in 0.00% of records; alias of iana:sourceTransportPort -->
+                    </column>
+                    <column>
+                        <name>dstport</name>
+                        <source>dstport</source>
+                        <!-- in 0.00% of records; alias of iana:destinationTransportPort -->
+                    </column>
+                    <column>
+                        <name>tcpflags</name>
+                        <source>tcpflags</source>
+                        <!-- in 0.00% of records; alias of iana:tcpControlBits -->
+                    </column>
+                    <column>
+                        <name>protocol</name>
+                        <source>protocol</source>
+                        <!-- in 0.00% of records; alias of iana:protocolIdentifier -->
+                    </column>
+                    <column>
+                        <name>iana:ipClassOfService</name>
+                        <source>iana:ipClassOfService</source>
+                        <!-- in 0.00% of records -->
+                    </column>
+                    <column>
+                        <name>iana:bgpSourceAsNumber</name>
+                        <source>iana:bgpSourceAsNumber</source>
+                        <!-- in 0.00% of records -->
+                    </column>
+                    <column>
+                        <name>iana:bgpDestinationAsNumber</name>
+                        <source>iana:bgpDestinationAsNumber</source>
+                        <!-- in 0.00% of records -->
+                    </column>
+                    <column>
+                        <name>iana:sourceIPv4PrefixLength</name>
+                        <source>iana:sourceIPv4PrefixLength</source>
+                        <!-- in 0.00% of records -->
+                    </column>
+                    <column>
+                        <name>iana:destinationIPv4PrefixLength</name>
+                        <source>iana:destinationIPv4PrefixLength</source>
+                        <!-- in 0.00% of records -->
+                    </column>
+                </columns>
+            </params>
+        </output>
+    </outputPlugins>
+</ipfixcol2>

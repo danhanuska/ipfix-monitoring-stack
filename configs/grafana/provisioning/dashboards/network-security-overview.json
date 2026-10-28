@@ -1,0 +1,2674 @@
+{
+  "apiVersion": "dashboard.grafana.app/v2",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "dfebo8zw9tpmof",
+    "namespace": "default",
+    "uid": "bef59287-c474-41a9-b4e9-585f20eb566c",
+    "resourceVersion": "1791140523015010",
+    "generation": 1,
+    "creationTimestamp": "2026-10-04T19:02:03Z",
+    "labels": {
+      "grafana.app/deprecatedInternalID": "3641144694910976"
+    },
+    "annotations": {
+      "grafana.app/createdBy": "access-policy:service",
+      "grafana.app/managedBy": "classic-file-provisioning",
+      "grafana.app/managerId": "Default Dashboards",
+      "grafana.app/sourceChecksum": "91afe6e01fdb6fdf42a4067e9560584b",
+      "grafana.app/sourcePath": "/etc/grafana/provisioning/dashboards/Network Security Overview-1.json",
+      "grafana.app/sourceTimestamp": "1790513501000",
+      "grafana.app/folder": ""
+    }
+  },
+  "spec": {
+    "annotations": [],
+    "cursorSync": "Off",
+    "description": "Flow-based detection of suspicious network activity from IPFIX data in ClickHouse: SYN/ACK floods, brute-force attempts on remote-access services, port scans and host sweeps, ARP and IP spoofing, and possible data exfiltration. Includes a filterable flow table. Use the source/destination IP (single address or CIDR), port and MAC filters to narrow the view. Thresholds are heuristic and should be tuned to your traffic.",
+    "editable": true,
+    "elements": {
+      "panel-13": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "clickhouse"
+                      },
+                      "group": "grafana-clickhouse-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorType": "sql",
+                        "format": 0,
+                        "meta": {
+                          "builderOptions": {
+                            "columns": [],
+                            "database": "",
+                            "limit": 1000,
+                            "mode": "list",
+                            "queryType": "table",
+                            "table": ""
+                          }
+                        },
+                        "pluginVersion": "4.21.2",
+                        "queryType": "timeseries",
+                        "rawSql": "SELECT\n    toStartOfInterval(flowstart, INTERVAL 1 MINUTE) AS time,\n    if(startsWith(IPv6NumToString(srcip), '::ffff:'), 'IPv4', 'IPv6') AS Version,\n    sum(bytes) AS \"Bytes\"\nFROM net_monitor.flows \nWHERE \n    $__timeFilter(flowstart)\nGROUP BY \n    time, \n    Version\nORDER BY time"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Usable variables: None\n\nThis time-series graph tracks the real-time changes and peaks in IPv4 and IPv6 traffic volume over the selected time window.",
+          "id": 13,
+          "links": [],
+          "title": "Network traffic over time: IPv4 vs IPv6",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "Bytes / 1min",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 20,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "decimals": 2,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  },
+                  "unit": "decbytes"
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "calcs": [
+                    "max"
+                  ],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "hoverProximity": 15,
+                  "mode": "multi",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.2.1"
+          }
+        }
+      },
+      "panel-21": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "clickhouse"
+                      },
+                      "group": "grafana-clickhouse-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorType": "sql",
+                        "format": 0,
+                        "meta": {
+                          "builderOptions": {
+                            "columns": [],
+                            "database": "",
+                            "limit": 1000,
+                            "mode": "list",
+                            "queryType": "table",
+                            "table": ""
+                          }
+                        },
+                        "pluginVersion": "4.21.3",
+                        "queryType": "timeseries",
+                        "rawSql": "WITH\n    '$target_srcip' IN ('', 'All') AS src_any,\n    '$target_dstip' IN ('', 'All') AS dst_any,\n    multiIf(src_any, '0.0.0.0/32',\n            position('$target_srcip', '/') > 0, '$target_srcip',\n            position('$target_srcip', ':') > 0, concat('$target_srcip', '/128'),\n            concat('$target_srcip', '/32')) AS srcnet,\n    multiIf(dst_any, '0.0.0.0/32',\n            position('$target_dstip', '/') > 0, '$target_dstip',\n            position('$target_dstip', ':') > 0, concat('$target_dstip', '/128'),\n            concat('$target_dstip', '/32')) AS dstnet\nSELECT\n    toStartOfInterval(flowstart, INTERVAL 30 SECOND) AS time,\n    concat(replaceAll(toString(srcip), '::ffff:', ''), ' -> ', replaceAll(toString(dstip), '::ffff:', '')) AS \"Connection\",\n    count() AS \"Flow count\"\nFROM net_monitor.flows\nWHERE $__timeFilter(flowstart)\n  AND protocol = 6\n  AND bitAnd(tcpflags, 18) = 16\n  AND (src_any OR isIPAddressInRange(replaceAll(toString(srcip), '::ffff:', ''), srcnet))\n  AND (dst_any OR isIPAddressInRange(replaceAll(toString(dstip), '::ffff:', ''), dstnet))\nGROUP BY time, srcip, dstip\nHAVING \"Flow count\" > 50\nORDER BY time"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Usable variables: Search source IP address, Search destination IP address\n\nThis panel monitors potential TCP ACK flood attacks by tracking connections with volume higher than 50 of ACK packets (SYN=0, ACK=1) in 30 seconds blocks. Each line in the graph represents a unique connection pair (Source IP -> Destination IP)",
+          "id": 21,
+          "links": [],
+          "title": "ACK flood detection",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "ACK flags / 30s",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "bars",
+                    "fillOpacity": 40,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "stepBefore",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "dashed"
+                    }
+                  },
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 1000
+                      }
+                    ]
+                  },
+                  "noValue": "No activity above threshold"
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "calcs": [
+                    "max",
+                    "sum"
+                  ],
+                  "displayMode": "table",
+                  "placement": "bottom",
+                  "showLegend": true,
+                  "sortBy": "Total",
+                  "sortDesc": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "hoverProximity": 15,
+                  "mode": "multi",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.2.1"
+          }
+        }
+      },
+      "panel-22": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "clickhouse"
+                      },
+                      "group": "grafana-clickhouse-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorType": "sql",
+                        "format": 1,
+                        "meta": {
+                          "builderOptions": {
+                            "columns": [],
+                            "database": "",
+                            "limit": 1000,
+                            "mode": "list",
+                            "queryType": "table",
+                            "table": ""
+                          }
+                        },
+                        "pluginVersion": "4.21.3",
+                        "queryType": "table",
+                        "rawSql": "WITH\n    replaceAll(toString(srcip), '::ffff:', '') AS src,\n    replaceAll(toString(dstip), '::ffff:', '') AS dst,\n    lower(arrayStringConcat(arrayReverse(extractAll(leftPad(hex(srcMacAddress), 12, '0'), '.{2}')), ':')) AS mac,\n    if(position('$target_srcip', '/') > 0, '$target_srcip', '0.0.0.0/32') AS srcnet,\n    if(position('$target_dstip', '/') > 0, '$target_dstip', '0.0.0.0/32') AS dstnet\nSELECT\n    formatDateTime(flowstart, '%H:%i:%S %d.%m.%Y') AS \"Start Time\",\n    formatDateTime(flowend, '%H:%i:%S %d.%m.%Y') AS \"End Time\",\n    mac AS \"MAC Address\",\n    srcip AS \"Source IP\",\n    dstip AS \"Destination IP\",\n    vlanId AS \"VLAN\",\n    srcport AS \"Source Port\",\n    dstport AS \"Destination Port\",\n    protocol_name AS \"Protocol\",\n    bytes AS \"Bytes\",\n    packets AS \"Packets\",\n    tcpflags_str AS \"TCP Flags\",\n    priority AS \"Priority\",\n    ecn AS \"ECN\",\n    direction AS \"Direction\"\nFROM net_monitor.flows\nWHERE\n    $__timeFilter(flowstart)\n    AND (mac = lower('$target_srcmac') OR '$target_srcmac' IN ('', 'All'))\n    AND (\n        (\n            ('$target_srcip' IN ('', 'All') OR (position('$target_srcip', '/') > 0 AND isIPAddressInRange(src, srcnet)) OR src = '$target_srcip')\n            AND ('$target_dstip' IN ('', 'All') OR (position('$target_dstip', '/') > 0 AND isIPAddressInRange(dst, dstnet)) OR dst = '$target_dstip')\n            AND ('$target_srcport' IN ('', 'All') OR toString(srcport) = '$target_srcport')\n            AND ('$target_dstport' IN ('', 'All') OR toString(dstport) = '$target_dstport')\n        )\n        OR\n        (\n            '$view_mode' = 'bidirectional'\n            AND ('$target_srcip' IN ('', 'All') OR (position('$target_srcip', '/') > 0 AND isIPAddressInRange(dst, srcnet)) OR dst = '$target_srcip')\n            AND ('$target_dstip' IN ('', 'All') OR (position('$target_dstip', '/') > 0 AND isIPAddressInRange(src, dstnet)) OR src = '$target_dstip')\n            AND ('$target_srcport' IN ('', 'All') OR toString(dstport) = '$target_srcport')\n            AND ('$target_dstport' IN ('', 'All') OR toString(srcport) = '$target_dstport')\n        )\n    )\nORDER BY flowstart DESC\nLIMIT $limit_records"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Usable variables: Search source MAC address, Search source IP address,  Search destination IP address, Search for source Port, Search for destination Port, Flow Direction, Limit Number\n\nThis panel provides a granular, low-level view of individual IPFIX flow records. It is designed for deep forensic inspection, allowing you to trace a specific security incident down to the physical interface and specific network service involved.",
+          "id": 22,
+          "links": [],
+          "title": "Detailed Network Flow Records",
+          "vizConfig": {
+            "group": "table",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "auto"
+                    },
+                    "filterable": true,
+                    "footer": {
+                      "reducers": []
+                    },
+                    "inspect": false,
+                    "wrapHeaderText": false,
+                    "wrapText": false
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Start"
+                    },
+                    "properties": [
+                      {
+                        "id": "unit",
+                        "value": "dateTimeAsIso"
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 173
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "End"
+                    },
+                    "properties": [
+                      {
+                        "id": "unit",
+                        "value": "dateTimeAsIso"
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 163
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Destination IP"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 121
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Source IP"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 122
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "VLAN"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 65
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Source Port"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 113
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Protocol"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 93
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Service"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 89
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Bytes"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 74
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "MAC Address"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 136
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Packets"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 92
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "TCP Flags"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 104
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Start Time"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 115
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "End Time"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 116
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "cellHeight": "sm",
+                "showHeader": true,
+                "sortBy": []
+              }
+            },
+            "version": "13.2.1"
+          }
+        }
+      },
+      "panel-26": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "clickhouse"
+                      },
+                      "group": "grafana-clickhouse-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorType": "sql",
+                        "format": 1,
+                        "meta": {
+                          "builderOptions": {
+                            "columns": [],
+                            "database": "",
+                            "limit": 1000,
+                            "mode": "list",
+                            "queryType": "table",
+                            "table": ""
+                          }
+                        },
+                        "pluginVersion": "4.21.3",
+                        "queryType": "table",
+                        "rawSql": "WITH\n    '$target_srcip' IN ('', 'All') AS src_any,\n    '$target_dstip' IN ('', 'All') AS dst_any,\n    multiIf(src_any, '0.0.0.0/32',\n            position('$target_srcip', '/') > 0, '$target_srcip',\n            position('$target_srcip', ':') > 0, concat('$target_srcip', '/128'),\n            concat('$target_srcip', '/32')) AS srcnet,\n    multiIf(dst_any, '0.0.0.0/32',\n            position('$target_dstip', '/') > 0, '$target_dstip',\n            position('$target_dstip', ':') > 0, concat('$target_dstip', '/128'),\n            concat('$target_dstip', '/32')) AS dstnet\nSELECT\n    toStartOfInterval(flowstart, INTERVAL 30 SECOND) AS time,\n    concat('Port [', toString(dstport), '] ',\n           replaceAll(toString(srcip), '::ffff:', ''), ' -> ',\n           replaceAll(toString(dstip), '::ffff:', '')) AS \"Connection\",\n    count() AS Attempts\nFROM net_monitor.flows\nWHERE $__timeFilter(flowstart)\n  AND protocol = 6\n  AND dstport IN (22, 23, 445, 3389)\n  AND bitAnd(tcpflags, 2) != 0\n  AND ('$target_dstport' IN ('', 'All') OR toString(dstport) = '$target_dstport')\n  AND (src_any OR isIPAddressInRange(replaceAll(toString(srcip), '::ffff:', ''), srcnet))\n  AND (dst_any OR isIPAddressInRange(replaceAll(toString(dstip), '::ffff:', ''), dstnet))\nGROUP BY time, srcip, dstip, dstport\nHAVING Attempts > 10\nORDER BY time"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "group": "partitionByValues",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "fields": [
+                        "Connection"
+                      ],
+                      "keepFields": false,
+                      "naming": {
+                        "asLabels": true
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "Usable variables: Search source IP address, Search destination IP, Search destination Port \n\nThis panel monitors high-frequency connection attempts to authentication ports (SSH, Telnet, SMB, RDP): more than 10 attempts from one source to one target and port in a 30-second block.",
+          "id": 26,
+          "links": [],
+          "title": "Brute-Force & Dictionary Attack Detection",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds",
+                    "seriesBy": "max"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "SSH attempts / 30s",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.5,
+                    "drawStyle": "bars",
+                    "fillOpacity": 0,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "#EAB839",
+                        "value": 30
+                      },
+                      {
+                        "color": "red",
+                        "value": 100
+                      }
+                    ]
+                  },
+                  "noValue": "No activity above threshold"
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "calcs": [
+                    "max",
+                    "sum"
+                  ],
+                  "displayMode": "table",
+                  "placement": "bottom",
+                  "showLegend": true,
+                  "sortBy": "Max",
+                  "sortDesc": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "hoverProximity": 15,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.2.1"
+          }
+        }
+      },
+      "panel-27": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "clickhouse"
+                      },
+                      "group": "grafana-clickhouse-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorType": "sql",
+                        "format": 0,
+                        "meta": {
+                          "builderOptions": {
+                            "columns": [],
+                            "database": "",
+                            "limit": 1000,
+                            "mode": "list",
+                            "queryType": "table",
+                            "table": ""
+                          }
+                        },
+                        "pluginVersion": "4.21.3",
+                        "queryType": "timeseries",
+                        "rawSql": "WITH\n    '$target_srcip' IN ('', 'All') AS src_any,\n    '$target_dstip' IN ('', 'All') AS dst_any,\n    multiIf(src_any, '0.0.0.0/32',\n            position('$target_srcip', '/') > 0, '$target_srcip',\n            position('$target_srcip', ':') > 0, concat('$target_srcip', '/128'),\n            concat('$target_srcip', '/32')) AS srcnet,\n    multiIf(dst_any, '0.0.0.0/32',\n            position('$target_dstip', '/') > 0, '$target_dstip',\n            position('$target_dstip', ':') > 0, concat('$target_dstip', '/128'),\n            concat('$target_dstip', '/32')) AS dstnet\nSELECT\n    toStartOfInterval(flowstart, INTERVAL 30 SECOND) AS time,\n    concat(replaceAll(toString(srcip), '::ffff:', ''), ' -> ', replaceAll(toString(dstip), '::ffff:', '')) AS \"Connection\",\n    count() AS \"Flow count\"\nFROM net_monitor.flows\nWHERE $__timeFilter(flowstart)\n  AND protocol = 6\n  AND bitAnd(tcpflags, 18) = 2\n  AND (src_any OR isIPAddressInRange(replaceAll(toString(srcip), '::ffff:', ''), srcnet))\n  AND (dst_any OR isIPAddressInRange(replaceAll(toString(dstip), '::ffff:', ''), dstnet))\nGROUP BY time, srcip, dstip\nHAVING \"Flow count\" > 50\nORDER BY time"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Usable variables: Search source IP address, Search destination IP address\n\nThis panel monitors potential TCP SYN flood attacks by tracking connections with volume higher than 50 of SYN packets (SYN=1, ACK=0) in 30 seconds blocks. Each line in the graph represents a unique connection pair (Source IP -> Destination IP)",
+          "id": 27,
+          "links": [],
+          "title": "SYN flood detection",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "SYN flags / 30s",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "bars",
+                    "fillOpacity": 40,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "stepBefore",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "dashed"
+                    }
+                  },
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 1000
+                      }
+                    ]
+                  },
+                  "noValue": "No activity above threshold"
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "calcs": [
+                    "max",
+                    "sum"
+                  ],
+                  "displayMode": "table",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "hoverProximity": 15,
+                  "mode": "multi",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.2.1"
+          }
+        }
+      },
+      "panel-28": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "clickhouse"
+                      },
+                      "group": "grafana-clickhouse-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorType": "sql",
+                        "format": 1,
+                        "meta": {
+                          "builderOptions": {
+                            "columns": [],
+                            "database": "",
+                            "limit": 1000,
+                            "mode": "list",
+                            "queryType": "table",
+                            "table": ""
+                          }
+                        },
+                        "pluginVersion": "4.21.3",
+                        "queryType": "table",
+                        "rawSql": "WITH\n    '$target_srcip' IN ('', 'All') AS src_any,\n    multiIf(src_any, '0.0.0.0/32',\n            position('$target_srcip', '/') > 0, '$target_srcip',\n            position('$target_srcip', ':') > 0, concat('$target_srcip', '/128'),\n            concat('$target_srcip', '/32')) AS srcnet,\n    toStartOfInterval(flowstart, INTERVAL 300 SECOND) AS bucket\nSELECT\n    concat(formatDateTime(bucket, '%H:%i:%S'), ' - ', formatDateTime(bucket + 300, '%H:%i:%S %Y-%m-%d')) AS \"Time\",\n    replaceAll(toString(srcip), '::ffff:', '') AS \"Source IP\",\n    uniqExact(srcMacAddress) AS \"Conflict Level\",\n    arrayStringConcat(arrayMap(v -> toString(v), arraySort(groupUniqArray(vlanId))), ', ') AS \"VLAN IDs\",\n    arrayStringConcat(\n        arrayMap(m -> lower(arrayStringConcat(arrayReverse(extractAll(leftPad(hex(m), 12, '0'), '.{2}')), ':')),\n                 groupUniqArray(srcMacAddress)),\n        ', ') AS \"Detected MACs\"\nFROM net_monitor.flows\nWHERE $__timeFilter(flowstart)\n  AND direction IN ('Internal', 'Outbound')\n  AND srcMacAddress != 0\n  AND srcip NOT IN (toIPv6('::'), toIPv6('::ffff:0.0.0.0'))\n  AND (src_any OR isIPAddressInRange(replaceAll(toString(srcip), '::ffff:', ''), srcnet))\nGROUP BY bucket, srcip\nHAVING \"Conflict Level\" > 1\nORDER BY \"Conflict Level\" DESC, bucket DESC\nLIMIT least(toInt64($limit_records), 50)"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Usable variables: Search source IP address, Limit Number\n\nThis panel performs real-time detection of ARP Spoofing and IP Address Conflicts within the local network segments in 5 minutes blocks. By analyzing the Internal and Outbound traffic directions, the system identifies instances where a single logical IP address is claimed by multiple physical MAC addresses.",
+          "id": 28,
+          "links": [],
+          "title": "L2 Attack: Local ARP Spoofing Detection",
+          "vizConfig": {
+            "group": "table",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "auto"
+                    },
+                    "filterable": true,
+                    "footer": {
+                      "reducers": []
+                    },
+                    "inspect": false
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "#ffb700",
+                        "value": 2
+                      },
+                      {
+                        "color": "#ff001e",
+                        "value": 4
+                      }
+                    ]
+                  },
+                  "noValue": "No activity above threshold"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Conflict Level"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "mode": "basic",
+                          "type": "gauge",
+                          "valueDisplayMode": "text"
+                        }
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "thresholds"
+                        }
+                      },
+                      {
+                        "id": "min",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Detected MACs"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.wrapText",
+                        "value": true
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Time"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 239
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Source IP"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 129
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "cellHeight": "sm",
+                "enablePagination": true,
+                "maxRowHeight": 100,
+                "showHeader": true,
+                "sortBy": []
+              }
+            },
+            "version": "13.2.1"
+          }
+        }
+      },
+      "panel-29": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "clickhouse"
+                      },
+                      "group": "grafana-clickhouse-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorType": "sql",
+                        "format": 0,
+                        "meta": {
+                          "builderOptions": {
+                            "columns": [],
+                            "database": "",
+                            "limit": 1000,
+                            "mode": "list",
+                            "queryType": "table",
+                            "table": ""
+                          }
+                        },
+                        "pluginVersion": "4.21.3",
+                        "queryType": "timeseries",
+                        "rawSql": "WITH\n    '$target_srcip' IN ('', 'All') AS src_any,\n    multiIf(src_any, '0.0.0.0/32',\n            position('$target_srcip', '/') > 0, '$target_srcip',\n            position('$target_srcip', ':') > 0, concat('$target_srcip', '/128'),\n            concat('$target_srcip', '/32')) AS srcnet\nSELECT\n    toStartOfInterval(flowstart, INTERVAL 5 MINUTE) AS time,\n    replaceAll(toString(srcip), '::ffff:', '') AS \"Source IP\",\n    sum(bytes) AS TotalBytes\nFROM net_monitor.flows\nWHERE $__timeFilter(flowstart)\n  AND direction = 'Outbound'\n  AND dstport IN (20, 21, 25, 53, 80, 443)\n  AND (src_any OR isIPAddressInRange(replaceAll(toString(srcip), '::ffff:', ''), srcnet))\nGROUP BY time, srcip\nHAVING TotalBytes > 52428800\nORDER BY time, TotalBytes DESC"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Usable variables: Search source IP address\n\nThis panel monitors unusually high outbound data transfer volumes across common communication and file transfer protocols (HTTP/S, FTP, SMTP, DNS). It identifies potential data exfiltration attempts or unauthorized large-scale data backups by tracking the total bytes sent from internal sources to external destinations.",
+          "id": 29,
+          "links": [],
+          "title": "Data Exfiltration Detection (Outbound Volume)",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds",
+                    "seriesBy": "max"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "Bytes / 5min",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.4,
+                    "drawStyle": "bars",
+                    "fillOpacity": 25,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "dashed"
+                    }
+                  },
+                  "decimals": 2,
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "semi-dark-yellow",
+                        "value": 100000000
+                      },
+                      {
+                        "color": "semi-dark-red",
+                        "value": 1000000000
+                      }
+                    ]
+                  },
+                  "unit": "decbytes",
+                  "noValue": "No activity above threshold"
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "calcs": [
+                    "max",
+                    "sum"
+                  ],
+                  "displayMode": "table",
+                  "placement": "bottom",
+                  "showLegend": true,
+                  "sortBy": "Total",
+                  "sortDesc": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            "version": "13.2.1"
+          }
+        }
+      },
+      "panel-32": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "clickhouse"
+                      },
+                      "group": "grafana-clickhouse-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "builderOptions": {
+                          "aggregates": [
+                            {
+                              "aggregateType": "sum",
+                              "column": "bytes"
+                            }
+                          ],
+                          "columns": [
+                            {
+                              "custom": false,
+                              "name": "ip_proto",
+                              "type": "String"
+                            }
+                          ],
+                          "database": "dankflows",
+                          "filters": [
+                            {
+                              "condition": "AND",
+                              "filterType": "custom",
+                              "key": "stamp_inserted",
+                              "operator": "WITH IN DASHBOARD TIME RANGE",
+                              "type": "DateTime",
+                              "value": "TODAY"
+                            },
+                            {
+                              "condition": "AND",
+                              "filterType": "custom",
+                              "key": "tag",
+                              "operator": "=",
+                              "type": "UInt8",
+                              "value": 0
+                            }
+                          ],
+                          "groupBy": [
+                            "ip_proto"
+                          ],
+                          "limit": 0,
+                          "meta": {},
+                          "mode": "aggregate",
+                          "orderBy": [],
+                          "queryType": "table",
+                          "table": "sflow"
+                        },
+                        "editorType": "sql",
+                        "format": 1,
+                        "meta": {
+                          "builderOptions": {
+                            "aggregates": [
+                              {
+                                "aggregateType": "sum",
+                                "column": "bytes"
+                              }
+                            ],
+                            "columns": [
+                              {
+                                "custom": false,
+                                "name": "ip_proto",
+                                "type": "String"
+                              }
+                            ],
+                            "database": "dankflows",
+                            "filters": [
+                              {
+                                "condition": "AND",
+                                "filterType": "custom",
+                                "key": "stamp_inserted",
+                                "operator": "WITH IN DASHBOARD TIME RANGE",
+                                "type": "DateTime",
+                                "value": "TODAY"
+                              },
+                              {
+                                "condition": "AND",
+                                "filterType": "custom",
+                                "key": "tag",
+                                "operator": "=",
+                                "type": "UInt8",
+                                "value": 0
+                              }
+                            ],
+                            "groupBy": [
+                              "ip_proto"
+                            ],
+                            "limit": 0,
+                            "meta": {},
+                            "mode": "aggregate",
+                            "orderBy": [],
+                            "queryType": "table",
+                            "table": "sflow"
+                          }
+                        },
+                        "pluginVersion": "4.21.2",
+                        "queryType": "table",
+                        "rawSql": "SELECT\n    priority AS \"Priority Level\",\n    sum(bytes) AS \"Total Bytes\"\nFROM net_monitor.flows \nWHERE $__timeFilter(flowstart)\nGROUP BY \"Priority Level\"\nORDER BY \"Total Bytes\" DESC"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Usable variables: None\n\nThis panel visualizes the distribution of network traffic according to Quality of Service (QoS) priority levels, identifying the volume of data assigned to different traffic classes and prioritization schemes.",
+          "id": 32,
+          "links": [],
+          "title": "QoS Load",
+          "vizConfig": {
+            "group": "piechart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "#73BF69",
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  },
+                  "unit": "decbytes"
+                },
+                "overrides": []
+              },
+              "options": {
+                "displayLabels": [
+                  "percent",
+                  "name"
+                ],
+                "legend": {
+                  "displayMode": "table",
+                  "placement": "bottom",
+                  "showLegend": true,
+                  "values": [
+                    "value"
+                  ]
+                },
+                "pieType": "donut",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": true
+                },
+                "sort": "desc",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.2.1"
+          }
+        }
+      },
+      "panel-33": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "clickhouse"
+                      },
+                      "group": "grafana-clickhouse-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "builderOptions": {
+                          "aggregates": [
+                            {
+                              "aggregateType": "sum",
+                              "column": "bytes"
+                            }
+                          ],
+                          "columns": [
+                            {
+                              "custom": false,
+                              "name": "ip_proto",
+                              "type": "String"
+                            }
+                          ],
+                          "database": "dankflows",
+                          "filters": [
+                            {
+                              "condition": "AND",
+                              "filterType": "custom",
+                              "key": "stamp_inserted",
+                              "operator": "WITH IN DASHBOARD TIME RANGE",
+                              "type": "DateTime",
+                              "value": "TODAY"
+                            },
+                            {
+                              "condition": "AND",
+                              "filterType": "custom",
+                              "key": "tag",
+                              "operator": "=",
+                              "type": "UInt8",
+                              "value": 0
+                            }
+                          ],
+                          "groupBy": [
+                            "ip_proto"
+                          ],
+                          "limit": 0,
+                          "meta": {},
+                          "mode": "aggregate",
+                          "orderBy": [],
+                          "queryType": "table",
+                          "table": "sflow"
+                        },
+                        "editorType": "sql",
+                        "format": 1,
+                        "meta": {
+                          "builderOptions": {
+                            "aggregates": [
+                              {
+                                "aggregateType": "sum",
+                                "column": "bytes"
+                              }
+                            ],
+                            "columns": [
+                              {
+                                "custom": false,
+                                "name": "ip_proto",
+                                "type": "String"
+                              }
+                            ],
+                            "database": "dankflows",
+                            "filters": [
+                              {
+                                "condition": "AND",
+                                "filterType": "custom",
+                                "key": "stamp_inserted",
+                                "operator": "WITH IN DASHBOARD TIME RANGE",
+                                "type": "DateTime",
+                                "value": "TODAY"
+                              },
+                              {
+                                "condition": "AND",
+                                "filterType": "custom",
+                                "key": "tag",
+                                "operator": "=",
+                                "type": "UInt8",
+                                "value": 0
+                              }
+                            ],
+                            "groupBy": [
+                              "ip_proto"
+                            ],
+                            "limit": 0,
+                            "meta": {},
+                            "mode": "aggregate",
+                            "orderBy": [],
+                            "queryType": "table",
+                            "table": "sflow"
+                          }
+                        },
+                        "pluginVersion": "4.21.2",
+                        "queryType": "table",
+                        "rawSql": "SELECT\n    ecn AS \"ECN Status\",\n    sum(bytes) AS \"Total Bytes\"\nFROM net_monitor.flows \nWHERE $__timeFilter(flowstart)\nGROUP BY \"ECN Status\"\nORDER BY \"Total Bytes\" DESC"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Usable variables: None\n\nThis panel shows the breakdown of traffic based on Explicit Congestion Notification (ECN) bits, helping to identify network congestion events and how end-points are responding to transmission load.",
+          "id": 33,
+          "links": [],
+          "title": "Congestion Impact",
+          "vizConfig": {
+            "group": "piechart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "#73BF69",
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  },
+                  "unit": "decbytes"
+                },
+                "overrides": []
+              },
+              "options": {
+                "displayLabels": [
+                  "percent",
+                  "name"
+                ],
+                "legend": {
+                  "displayMode": "table",
+                  "placement": "bottom",
+                  "showLegend": true,
+                  "values": [
+                    "value"
+                  ]
+                },
+                "pieType": "donut",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": true
+                },
+                "sort": "desc",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.2.1"
+          }
+        }
+      },
+      "panel-37": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "clickhouse"
+                      },
+                      "group": "grafana-clickhouse-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorType": "sql",
+                        "format": 0,
+                        "meta": {
+                          "builderOptions": {
+                            "columns": [],
+                            "database": "",
+                            "limit": 1000,
+                            "mode": "list",
+                            "queryType": "table",
+                            "table": ""
+                          }
+                        },
+                        "pluginVersion": "4.21.3",
+                        "queryType": "timeseries",
+                        "rawSql": "WITH\n    '$target_srcip' IN ('', 'All') AS src_any,\n    '$target_dstip' IN ('', 'All') AS dst_any,\n    multiIf(src_any, '0.0.0.0/32',\n            position('$target_srcip', '/') > 0, '$target_srcip',\n            position('$target_srcip', ':') > 0, concat('$target_srcip', '/128'),\n            concat('$target_srcip', '/32')) AS srcnet,\n    multiIf(dst_any, '0.0.0.0/32',\n            position('$target_dstip', '/') > 0, '$target_dstip',\n            position('$target_dstip', ':') > 0, concat('$target_dstip', '/128'),\n            concat('$target_dstip', '/32')) AS dstnet\nSELECT\n    toStartOfInterval(flowstart, INTERVAL 1 MINUTE) AS time,\n    replaceAll(toString(srcip), '::ffff:', '') AS Source_IP,\n    replaceAll(toString(dstip), '::ffff:', '') AS Target_IP,\n    uniq(dstport) AS \"Unique ports\"\nFROM net_monitor.flows\nWHERE $__timeFilter(flowstart)\n  AND protocol IN (6, 17)\n  AND NOT (srcport < 1024 AND dstport >= 1024)\n  AND (src_any OR isIPAddressInRange(replaceAll(toString(srcip), '::ffff:', ''), srcnet))\n  AND (dst_any OR isIPAddressInRange(replaceAll(toString(dstip), '::ffff:', ''), dstnet))\nGROUP BY time, srcip, dstip\nHAVING \"Unique ports\" > 200\nORDER BY time"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Usable variables: Search source IP address, Search destination IP address\n\nThis panel monitors potential vertical port scanning by tracking Source IP activity with a volume higher than 200 unique destination ports in 1-minute blocks. Each bar in the graph represents a unique Source IP performing anomalous scanning behavior on single target IP address, attempting to discover vulnerable services on host machines within the monitored network segments.",
+          "id": 37,
+          "links": [],
+          "title": "Reconnaissance: Vertical Port Scan",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "Unique destination Ports / 1m",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "bars",
+                    "fillOpacity": 0,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "dashed"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "semi-dark-yellow",
+                        "value": 1000
+                      },
+                      {
+                        "color": "dark-orange",
+                        "value": 5000
+                      },
+                      {
+                        "color": "semi-dark-red",
+                        "value": 10000
+                      }
+                    ]
+                  },
+                  "noValue": "No activity above threshold"
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "calcs": [
+                    "mean",
+                    "max",
+                    "sum"
+                  ],
+                  "displayMode": "table",
+                  "placement": "bottom",
+                  "showLegend": true,
+                  "sortBy": "Total",
+                  "sortDesc": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "hoverProximity": 20,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.2.1"
+          }
+        }
+      },
+      "panel-38": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "clickhouse"
+                      },
+                      "group": "grafana-clickhouse-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorType": "sql",
+                        "format": 0,
+                        "meta": {
+                          "builderOptions": {
+                            "columns": [],
+                            "database": "",
+                            "limit": 1000,
+                            "mode": "list",
+                            "queryType": "table",
+                            "table": ""
+                          }
+                        },
+                        "pluginVersion": "4.21.3",
+                        "queryType": "timeseries",
+                        "rawSql": "WITH\n    '$target_srcip' IN ('', 'All') AS src_any,\n    multiIf(src_any, '0.0.0.0/32',\n            position('$target_srcip', '/') > 0, '$target_srcip',\n            position('$target_srcip', ':') > 0, concat('$target_srcip', '/128'),\n            concat('$target_srcip', '/32')) AS srcnet\nSELECT\n    toStartOfInterval(flowstart, INTERVAL 1 MINUTE) AS time,\n    replaceAll(toString(srcip), '::ffff:', '') AS Source_IP,\n    uniq(dstip) AS \"Unique targets\"\nFROM net_monitor.flows\nWHERE $__timeFilter(flowstart)\n  AND NOT (protocol IN (6, 17) AND srcport < 1024 AND dstport >= 1024)\n  AND (src_any OR isIPAddressInRange(replaceAll(toString(srcip), '::ffff:', ''), srcnet))\nGROUP BY time, srcip\nHAVING \"Unique targets\" > 100\nORDER BY time, \"Unique targets\" DESC"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Usable variables: Search source IP address\n\nThis panel monitors potential horizontal network sweeps by tracking Source IP activity with a volume higher than 100 unique destination IP addresses in 1-minute blocks. Each bar in the graph represents a unique Source IP attempting to discover active hosts across the monitored network segments (Network Mapping).",
+          "id": 38,
+          "links": [],
+          "title": "Reconnaissance: Horizontal Network Sweep",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "Unique destination IPs / 1m",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "bars",
+                    "fillOpacity": 0,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "dashed"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "semi-dark-yellow",
+                        "value": 1000
+                      },
+                      {
+                        "color": "dark-orange",
+                        "value": 5000
+                      },
+                      {
+                        "color": "semi-dark-red",
+                        "value": 10000
+                      }
+                    ]
+                  },
+                  "noValue": "No activity above threshold"
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "calcs": [
+                    "mean",
+                    "max",
+                    "sum"
+                  ],
+                  "displayMode": "table",
+                  "placement": "bottom",
+                  "showLegend": true,
+                  "sortBy": "Total",
+                  "sortDesc": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "hoverProximity": 20,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.2.1"
+          }
+        }
+      },
+      "panel-4": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "clickhouse"
+                      },
+                      "group": "grafana-clickhouse-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "builderOptions": {
+                          "aggregates": [
+                            {
+                              "aggregateType": "sum",
+                              "column": "bytes"
+                            }
+                          ],
+                          "columns": [
+                            {
+                              "custom": false,
+                              "name": "ip_proto",
+                              "type": "String"
+                            }
+                          ],
+                          "database": "dankflows",
+                          "filters": [
+                            {
+                              "condition": "AND",
+                              "filterType": "custom",
+                              "key": "stamp_inserted",
+                              "operator": "WITH IN DASHBOARD TIME RANGE",
+                              "type": "DateTime",
+                              "value": "TODAY"
+                            },
+                            {
+                              "condition": "AND",
+                              "filterType": "custom",
+                              "key": "tag",
+                              "operator": "=",
+                              "type": "UInt8",
+                              "value": 0
+                            }
+                          ],
+                          "groupBy": [
+                            "ip_proto"
+                          ],
+                          "limit": 0,
+                          "meta": {},
+                          "mode": "aggregate",
+                          "orderBy": [],
+                          "queryType": "table",
+                          "table": "sflow"
+                        },
+                        "editorType": "sql",
+                        "format": 1,
+                        "meta": {
+                          "builderOptions": {
+                            "aggregates": [
+                              {
+                                "aggregateType": "sum",
+                                "column": "bytes"
+                              }
+                            ],
+                            "columns": [
+                              {
+                                "custom": false,
+                                "name": "ip_proto",
+                                "type": "String"
+                              }
+                            ],
+                            "database": "dankflows",
+                            "filters": [
+                              {
+                                "condition": "AND",
+                                "filterType": "custom",
+                                "key": "stamp_inserted",
+                                "operator": "WITH IN DASHBOARD TIME RANGE",
+                                "type": "DateTime",
+                                "value": "TODAY"
+                              },
+                              {
+                                "condition": "AND",
+                                "filterType": "custom",
+                                "key": "tag",
+                                "operator": "=",
+                                "type": "UInt8",
+                                "value": 0
+                              }
+                            ],
+                            "groupBy": [
+                              "ip_proto"
+                            ],
+                            "limit": 0,
+                            "meta": {},
+                            "mode": "aggregate",
+                            "orderBy": [],
+                            "queryType": "table",
+                            "table": "sflow"
+                          }
+                        },
+                        "pluginVersion": "4.21.2",
+                        "queryType": "table",
+                        "rawSql": "SELECT\n    protocol_name AS \"Protocol\",\n    sum(bytes) AS total_bytes\nFROM net_monitor.flows     \nWHERE \n    $__timeFilter(flowstart)\n    AND direction = 'Inbound'\nGROUP BY protocol_name\nORDER BY total_bytes DESC"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Usable variables: None\n\nThis panel visualizes the distribution of inbound network traffic categorized by communication protocols such as TCP, UDP, or ICMP.",
+          "id": 4,
+          "links": [],
+          "title": "Protocols Traffic Inbound",
+          "vizConfig": {
+            "group": "piechart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "#73BF69",
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  },
+                  "unit": "decbytes"
+                },
+                "overrides": []
+              },
+              "options": {
+                "displayLabels": [
+                  "percent",
+                  "name"
+                ],
+                "legend": {
+                  "displayMode": "table",
+                  "placement": "bottom",
+                  "showLegend": true,
+                  "values": [
+                    "value"
+                  ]
+                },
+                "pieType": "donut",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": true
+                },
+                "sort": "desc",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.2.1"
+          }
+        }
+      },
+      "panel-5": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "clickhouse"
+                      },
+                      "group": "grafana-clickhouse-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "builderOptions": {
+                          "aggregates": [
+                            {
+                              "aggregateType": "sum",
+                              "alias": "IPv4",
+                              "column": "bytes"
+                            }
+                          ],
+                          "columns": [],
+                          "database": "dankflows",
+                          "filters": [
+                            {
+                              "condition": "AND",
+                              "filterType": "custom",
+                              "key": "stamp_inserted",
+                              "operator": "WITH IN DASHBOARD TIME RANGE",
+                              "type": "DateTime",
+                              "value": "TODAY"
+                            },
+                            {
+                              "condition": "AND",
+                              "filterType": "custom",
+                              "key": "family",
+                              "operator": "=",
+                              "type": "UInt16",
+                              "value": 4
+                            }
+                          ],
+                          "groupBy": [],
+                          "limit": 0,
+                          "meta": {},
+                          "mode": "aggregate",
+                          "orderBy": [],
+                          "queryType": "table",
+                          "table": "sflow"
+                        },
+                        "editorType": "sql",
+                        "format": 1,
+                        "meta": {
+                          "builderOptions": {
+                            "aggregates": [
+                              {
+                                "aggregateType": "sum",
+                                "alias": "IPv4",
+                                "column": "bytes"
+                              }
+                            ],
+                            "columns": [],
+                            "database": "dankflows",
+                            "filters": [
+                              {
+                                "condition": "AND",
+                                "filterType": "custom",
+                                "key": "stamp_inserted",
+                                "operator": "WITH IN DASHBOARD TIME RANGE",
+                                "type": "DateTime",
+                                "value": "TODAY"
+                              },
+                              {
+                                "condition": "AND",
+                                "filterType": "custom",
+                                "key": "family",
+                                "operator": "=",
+                                "type": "UInt16",
+                                "value": 4
+                              }
+                            ],
+                            "groupBy": [],
+                            "limit": 0,
+                            "meta": {},
+                            "mode": "aggregate",
+                            "orderBy": [],
+                            "queryType": "table",
+                            "table": "sflow"
+                          }
+                        },
+                        "pluginVersion": "4.21.2",
+                        "queryType": "table",
+                        "rawSql": "SELECT\n    if(startsWith(IPv6NumToString(srcip), '::ffff:'), 'IPv4', 'IPv6') AS \"IP version\",\n    sum(bytes) AS \"Bytes\"\nFROM net_monitor.flows \nWHERE \n    $__timeFilter(flowstart)\nGROUP BY \"IP version\"\nORDER BY \"Bytes\" DESC"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Usable variables: None\n\nThis panel shows the total ratio between IPv4 and IPv6 traffic volume across the entire monitored infrastructure.",
+          "id": 5,
+          "links": [],
+          "title": "Traffic share: IPv4 vs IPv6",
+          "vizConfig": {
+            "group": "piechart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "#73BF69",
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  },
+                  "unit": "decbytes"
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "displayMode": "table",
+                  "placement": "bottom",
+                  "showLegend": true,
+                  "values": [
+                    "percent",
+                    "value"
+                  ]
+                },
+                "pieType": "donut",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": true
+                },
+                "sort": "desc",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.2.1"
+          }
+        }
+      },
+      "panel-8": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "clickhouse"
+                      },
+                      "group": "grafana-clickhouse-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "builderOptions": {
+                          "aggregates": [
+                            {
+                              "aggregateType": "sum",
+                              "column": "bytes"
+                            }
+                          ],
+                          "columns": [
+                            {
+                              "custom": false,
+                              "name": "ip_proto",
+                              "type": "String"
+                            }
+                          ],
+                          "database": "dankflows",
+                          "filters": [
+                            {
+                              "condition": "AND",
+                              "filterType": "custom",
+                              "key": "stamp_inserted",
+                              "operator": "WITH IN DASHBOARD TIME RANGE",
+                              "type": "DateTime",
+                              "value": "TODAY"
+                            },
+                            {
+                              "condition": "AND",
+                              "filterType": "custom",
+                              "key": "tag",
+                              "operator": "=",
+                              "type": "UInt8",
+                              "value": 1
+                            }
+                          ],
+                          "groupBy": [
+                            "ip_proto"
+                          ],
+                          "limit": 0,
+                          "meta": {},
+                          "mode": "aggregate",
+                          "orderBy": [],
+                          "queryType": "table",
+                          "table": "sflow"
+                        },
+                        "editorType": "sql",
+                        "format": 1,
+                        "meta": {
+                          "builderOptions": {
+                            "aggregates": [
+                              {
+                                "aggregateType": "sum",
+                                "column": "bytes"
+                              }
+                            ],
+                            "columns": [
+                              {
+                                "custom": false,
+                                "name": "ip_proto",
+                                "type": "String"
+                              }
+                            ],
+                            "database": "dankflows",
+                            "filters": [
+                              {
+                                "condition": "AND",
+                                "filterType": "custom",
+                                "key": "stamp_inserted",
+                                "operator": "WITH IN DASHBOARD TIME RANGE",
+                                "type": "DateTime",
+                                "value": "TODAY"
+                              },
+                              {
+                                "condition": "AND",
+                                "filterType": "custom",
+                                "key": "tag",
+                                "operator": "=",
+                                "type": "UInt8",
+                                "value": 1
+                              }
+                            ],
+                            "groupBy": [
+                              "ip_proto"
+                            ],
+                            "limit": 0,
+                            "meta": {},
+                            "mode": "aggregate",
+                            "orderBy": [],
+                            "queryType": "table",
+                            "table": "sflow"
+                          }
+                        },
+                        "pluginVersion": "4.21.2",
+                        "queryType": "table",
+                        "rawSql": "SELECT\n    protocol_name AS \"Protocol\",\n    sum(bytes) AS total_bytes\nFROM net_monitor.flows        \nWHERE \n    $__timeFilter(flowstart)\n    AND direction = 'Internal'\nGROUP BY protocol_name\nORDER BY total_bytes DESC"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "Usable variables: None\n\nThis panel visualizes the distribution of outbound network traffic categorized by communication protocols such as TCP, UDP, or ICMP.",
+          "id": 8,
+          "links": [],
+          "title": "Protocols Traffic Outbound",
+          "vizConfig": {
+            "group": "piechart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "#73BF69",
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  },
+                  "unit": "decbytes"
+                },
+                "overrides": []
+              },
+              "options": {
+                "displayLabels": [
+                  "percent",
+                  "name"
+                ],
+                "legend": {
+                  "displayMode": "table",
+                  "placement": "bottom",
+                  "showLegend": true,
+                  "values": [
+                    "value"
+                  ]
+                },
+                "pieType": "donut",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": true
+                },
+                "sort": "desc",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.2.1"
+          }
+        }
+      }
+    },
+    "layout": {
+      "kind": "RowsLayout",
+      "spec": {
+        "rows": [
+          {
+            "kind": "RowsLayoutRow",
+            "spec": {
+              "collapse": false,
+              "layout": {
+                "kind": "GridLayout",
+                "spec": {
+                  "items": [
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-4"
+                        },
+                        "height": 10,
+                        "width": 5,
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-32"
+                        },
+                        "height": 10,
+                        "width": 5,
+                        "x": 5,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-5"
+                        },
+                        "height": 10,
+                        "width": 4,
+                        "x": 10,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-8"
+                        },
+                        "height": 10,
+                        "width": 5,
+                        "x": 14,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-33"
+                        },
+                        "height": 10,
+                        "width": 5,
+                        "x": 19,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-13"
+                        },
+                        "height": 5,
+                        "width": 24,
+                        "x": 0,
+                        "y": 10
+                      }
+                    }
+                  ]
+                }
+              },
+              "title": "Global Infrastructure Overview"
+            }
+          },
+          {
+            "kind": "RowsLayoutRow",
+            "spec": {
+              "collapse": false,
+              "layout": {
+                "kind": "GridLayout",
+                "spec": {
+                  "items": [
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-22"
+                        },
+                        "height": 9,
+                        "width": 24,
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-27"
+                        },
+                        "height": 8,
+                        "width": 12,
+                        "x": 0,
+                        "y": 9
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-21"
+                        },
+                        "height": 8,
+                        "width": 12,
+                        "x": 12,
+                        "y": 9
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-28"
+                        },
+                        "height": 16,
+                        "width": 12,
+                        "x": 0,
+                        "y": 17
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-26"
+                        },
+                        "height": 8,
+                        "width": 12,
+                        "x": 12,
+                        "y": 17
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-29"
+                        },
+                        "height": 8,
+                        "width": 12,
+                        "x": 12,
+                        "y": 25
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-37"
+                        },
+                        "height": 11,
+                        "width": 12,
+                        "x": 0,
+                        "y": 33
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-38"
+                        },
+                        "height": 11,
+                        "width": 12,
+                        "x": 12,
+                        "y": 33
+                      }
+                    }
+                  ]
+                }
+              },
+              "title": "Security & Forensic Investigation"
+            }
+          }
+        ]
+      }
+    },
+    "links": [],
+    "liveNow": false,
+    "preload": false,
+    "tags": [],
+    "timeSettings": {
+      "autoRefresh": "",
+      "autoRefreshIntervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "fiscalYearStartMonth": 0,
+      "from": "now-6h",
+      "hideTimepicker": false,
+      "timezone": "browser",
+      "to": "now"
+    },
+    "title": "Network Security Overview",
+    "variables": [
+      {
+        "kind": "CustomVariable",
+        "spec": {
+          "allowCustomValue": false,
+          "current": {
+            "text": "normal",
+            "value": "normal"
+          },
+          "description": "This toggle switches the analysis mode of the forensic table. Original (normal) displays flows strictly matching the defined source and destination criteria. Bidirectional automatically mirrors the search parameters to retrieve both the initial request and the corresponding response, providing a complete view of the network conversation.",
+          "hide": "dontHide",
+          "includeAll": false,
+          "label": "Flow Direction",
+          "multi": false,
+          "name": "view_mode",
+          "options": [],
+          "query": "Original : normal, Bidirectional : bidirectional",
+          "skipUrlSync": false,
+          "valuesFormat": "csv"
+        }
+      },
+      {
+        "kind": "TextVariable",
+        "spec": {
+          "current": {
+            "text": "",
+            "value": ""
+          },
+          "description": "This variable supports filtering by specific hosts or entire subnets. You can enter an individual IP address (e.g., 192.168.0.15) to isolate a single device, or a network range using CIDR notation (e.g., 192.168.0.0/24) to monitor an entire segment. Leaving the field empty or selecting \"All\" disables the filter.",
+          "hide": "dontHide",
+          "label": "Search source IP address",
+          "name": "target_srcip",
+          "query": "",
+          "skipUrlSync": false
+        }
+      },
+      {
+        "kind": "TextVariable",
+        "spec": {
+          "current": {
+            "text": "",
+            "value": ""
+          },
+          "description": "This variable supports filtering by specific target hosts or subnets. You can enter an individual IP address (e.g., 192.168.0.15) to isolate a single receiver, or a network range using CIDR notation (e.g., 192.168.0.0/24) to monitor an entire destination segment. Leaving the field empty or selecting \"All\" disables the filter.",
+          "hide": "dontHide",
+          "label": "Search destination IP address",
+          "name": "target_dstip",
+          "query": "",
+          "skipUrlSync": false
+        }
+      },
+      {
+        "kind": "TextVariable",
+        "spec": {
+          "current": {
+            "text": "",
+            "value": ""
+          },
+          "description": "This variable filters flows based on the physical hardware address of the sender. Enter the MAC address in standard colon-separated format (e.g., 00:1A:2B:3C:4D:5E) to trace network activity back to a specific physical device within the local network segments.",
+          "hide": "inControlsMenu",
+          "label": "Search source MAC address",
+          "name": "target_srcmac",
+          "query": "",
+          "skipUrlSync": false
+        }
+      },
+      {
+        "kind": "TextVariable",
+        "spec": {
+          "current": {
+            "text": "",
+            "value": ""
+          },
+          "description": "These variables filter traffic based on specific network service ports. You can enter a port number (e.g., 80 for HTTP, 443 for HTTPS, or 22 for SSH) to isolate traffic associated with a particular service. Set to \"All\" or leave empty to view activity across all ports.",
+          "hide": "inControlsMenu",
+          "label": "Search for source Port",
+          "name": "target_srcport",
+          "query": "",
+          "skipUrlSync": false
+        }
+      },
+      {
+        "kind": "TextVariable",
+        "spec": {
+          "current": {
+            "text": "",
+            "value": ""
+          },
+          "description": "These variables filter traffic based on specific network service ports. You can enter a port number (e.g., 80 for HTTP, 443 for HTTPS, or 22 for SSH) to isolate traffic associated with a particular service. Set to \"All\" or leave empty to view activity across all ports.",
+          "hide": "inControlsMenu",
+          "label": "Search for destination Port",
+          "name": "target_dstport",
+          "query": "",
+          "skipUrlSync": false
+        }
+      },
+      {
+        "kind": "TextVariable",
+        "spec": {
+          "current": {
+            "text": "1000",
+            "value": "1000"
+          },
+          "description": "This variable defines the maximum number of flow records displayed in the forensic table (e.g., 20, 100, or 1000). Adjusting this value helps balance the level of detail with dashboard performance and query execution speed.",
+          "hide": "inControlsMenu",
+          "label": "Limit Number",
+          "name": "limit_records",
+          "query": "1000",
+          "skipUrlSync": false
+        }
+      }
+    ]
+  }
+}

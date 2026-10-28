@@ -1,0 +1,55 @@
+<ipfixcol2>
+  <inputPlugins>
+    <input>
+      <name>UDP collector</name>
+      <plugin>udp</plugin>
+      <params>
+        <localPort>4739</localPort>
+        <localIPAddress>0.0.0.0</localIPAddress>
+      </params>
+    </input>
+  </inputPlugins>
+
+  <outputPlugins>
+    <output>
+      <name>ClickHouse output</name>
+      <plugin>clickhouse</plugin>
+      <params>
+        <connection>
+          <endpoints>
+            <endpoint>
+              <host>clickhouse</host>
+              <port>9000</port>
+            </endpoint>
+          </endpoints>
+          <user>default</user>
+          <password>${CLICKHOUSE_PASSWORD}</password>
+          <database>net_monitor</database>
+          <table>flows_raw</table>
+        </connection>
+        <inserterThreads>4</inserterThreads>
+        <blocks>32</blocks>
+        <blockInsertMaxDelaySecs>10</blockInsertMaxDelaySecs>
+        <blockInsertThreshold>100000</blockInsertThreshold>
+        <splitBiflow>true</splitBiflow>
+        <biflowEmptyAutoignore>true</biflowEmptyAutoignore>
+        <nonblocking>true</nonblocking>
+        <columns>
+          <column><name>vlanId</name><source>iana:vlanId</source></column>
+          <column><name>srcMacAddress</name><source>iana:sourceMacAddress</source></column>
+          <column><name>srcip</name><source>srcip</source></column>
+          <column><name>dstip</name><source>dstip</source></column>
+          <column><name>srcport</name><source>srcport</source></column>
+          <column><name>dstport</name><source>dstport</source></column>
+          <column><name>tcpflags</name><source>tcpflags</source></column>
+          <column><name>bytes</name><source>bytes</source></column>
+          <column><name>packets</name><source>packets</source></column>
+          <column><name>flowstart</name><source>flowstart</source></column>
+          <column><name>flowend</name><source>flowend</source></column>
+          <column><name>ipClassOfService</name><source>iana:ipClassOfService</source></column>
+          <column><name>protocol</name><source>protocol</source></column>
+        </columns>
+      </params>
+    </output>
+  </outputPlugins>
+</ipfixcol2>

@@ -1,0 +1,160 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  
+  permissions:
+    image: busybox:1.38.0
+    logging: *default-logging
+    container_name: net-monitor-permissions
+    volumes:
+      - ./data/clickhouse:/data/clickhouse
+      - ./data/grafana:/data/grafana
+    command: >
+      sh -c "
+        mkdir -p /data/clickhouse /data/grafana &&
+        { [ \"$$(stat -c %u /data/clickhouse)\" = 101 ] || chown -R 101:101 /data/clickhouse; } &&
+        { [ \"$$(stat -c %u /data/grafana)\" = 472 ] || chown -R 472:472 /data/grafana; } &&
+        echo 'Permissions OK'
+      "
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:23.8
+    logging: *default-logging
+    container_name: clickhouse
+    environment:
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:?Create .env based on .env.example}
+      - CLICKHOUSE_DB=net_monitor
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
+    ports:
+      - "127.0.0.1:8123:8123"
+      - "127.0.0.1:9000:9000"
+    volumes:
+      - ./data/clickhouse:/var/lib/clickhouse
+      - ./configs/clickhouse/init_tables.sql:/docker-entrypoint-initdb.d/init_tables.sql:ro
+      - ./configs/clickhouse/config.d/system_logs.xml:/etc/clickhouse-server/config.d/system_logs.xml:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8123/ping || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    depends_on:
+      permissions:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  ipfixcol2:
+    image: net-monitor-ipfixcol2:latest
+    logging: *default-logging
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM debian:12-slim
+        RUN apt-get update && apt-get install -y \
+            git gcc g++ cmake make python3-docutils zlib1g-dev librdkafka-dev pkg-config \
+            libxml2-dev liblz4-dev libzstd-dev gettext-base && \
+            rm -rf /var/lib/apt/lists/*
+        RUN git clone https://github.com/CESNET/libfds.git /opt/libfds && \
+            git -C /opt/libfds checkout ab219dc02bc70063a62da7841339e10b1a37fd3f
+        RUN cd /opt/libfds && mkdir build && cd build && \
+            cmake .. && make -j"$$(nproc)" && make install && ldconfig
+        RUN git clone https://github.com/CESNET/ipfixcol2.git /opt/ipfixcol2 && \
+            git -C /opt/ipfixcol2 checkout 4fffd44fbe6ecfe7ae7ad88d2caf53f83a3dd1d0
+        RUN cd /opt/ipfixcol2 && mkdir build && cd build && \
+            cmake .. && make -j"$$(nproc)" && make install
+        RUN cd /opt/ipfixcol2/extra_plugins/output/clickhouse && \
+            mkdir build && cd build && \
+            cmake .. && make -j"$$(nproc)" && make install
+        ENTRYPOINT ["sh", "-c", "envsubst < /etc/ipfixcol2/startup.xml.tpl > /tmp/startup.xml && exec ipfixcol2 -c /tmp/startup.xml"]
+    container_name: ipfixcol2
+    environment:
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:?Create .env based on .env.example}
+    ports:
+      - "4739:4739/udp"
+    volumes:
+      - ./configs/ipfixcol2/startup.xml.tpl:/etc/ipfixcol2/startup.xml.tpl:ro
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+    restart: unless-stopped
+  
+  schema-helper:
+    image: net-monitor-ipfixcol2:latest
+    logging: *default-logging  
+    pull_policy: never                       
+    container_name: schema-helper
+    profiles: ["setup"]                       
+    entrypoint: ["python3", "/opt/ipfixcol2/extra_plugins/output/clickhouse/schema-helper.py"]
+    command:
+      - "-p"
+      - "4739"
+      - "-t"
+      - "udp"
+      - "-i"
+      - "60"
+      - "-s"
+      - "/output/schema.sql"
+      - "-c"
+      - "/output/config.xml"
+      - "-o"
+      - "True"
+    ports:
+      - "4739:4739/udp"
+    volumes:
+      - ./scripts/generated-configs:/output
+
+  ipfix-generator:
+    image: python:3.12-alpine
+    logging: *default-logging
+    container_name: ipfix-generator
+    profiles: ["demo"]
+    command: ["python3", "-u", "/app/ipfix_generator.py"]
+    environment:
+      - TARGET_HOST=ipfixcol2        # collector service name on the Docker network
+      - TARGET_PORT=4739             # collector UDP port (must match startup.xml.tpl)
+      - SESSIONS_PER_SEC=${DEMO_SESSIONS_PER_SEC:-5}  # avg sessions/s at peak (5 ≈ 11 flows/s ≈ 1M rows/day)
+      - IPV6_RATIO=${DEMO_IPV6_RATIO:-0.15}  # share of IPv6 traffic (0–1)
+      - DIURNAL=1                    # 1 = daily/weekly load curve, 0 = constant full load
+      - PEAK_HOUR_UTC=13             # peak hour in UTC (13 = 15:00 CEST)
+      - OBSERVATION_DOMAIN=1         # ODID in the IPFIX header
+      - INCIDENT_INTERVAL_MIN=${DEMO_INCIDENT_INTERVAL_MIN:-20}  # avg minutes between simulated attacks (0 = off)
+      # - SEED=42                    # fixed seed = identical traffic on every start
+    volumes:
+      - ./scripts/ipfix-generator/ipfix_generator.py:/app/ipfix_generator.py:ro
+    depends_on:
+      ipfixcol2:
+        condition: service_started
+    restart: unless-stopped
+
+
+  grafana:
+    image: grafana/grafana:13.2.1
+    logging: *default-logging
+    container_name: grafana
+    entrypoint:
+      - sh
+      - -c
+      - |
+        grafana cli admin reset-admin-password "$$GF_SECURITY_ADMIN_PASSWORD" || true
+        exec /run.sh
+    environment:
+      - GF_PLUGINS_PREINSTALL_SYNC=grafana-clickhouse-datasource@4.22.1
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:?Set GRAFANA_ADMIN_PASSWORD in .env}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:?Create .env based on .env.example}
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+      - ./configs/grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+      permissions:
+        condition: service_completed_successfully
+    restart: unless-stopped
