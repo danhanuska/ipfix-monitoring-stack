@@ -423,7 +423,8 @@ Write to me directly. Issues in this repository are public, so they are not the 
 
 - **Dan Hanuška**, based in Prague, Czech Republic (CET). I work in English and Czech.
 - E-mail: [dan.hanuska.consulting@gmail.com](mailto:dan.hanuska.consulting@gmail.com)
-- LinkedIn: [linkedin.com/in/dan-hanuška-669114242](https://www.linkedin.com/in/dan-hanuška-669114242)
+- Web: [dhconsult.cz](https://dhconsult.cz)
+- LinkedIn: [linkedin.com/in/danhanuska](https://www.linkedin.com/in/danhanuska)
 
 A short description of your network is enough to start: which devices export flows, roughly how much traffic, and what you want to see.
 
